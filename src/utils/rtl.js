@@ -4,6 +4,7 @@
  */
 
 export const injectDirectionClass = (dir) => {
+  console.log("In fucntion - updating classes");
   if (dir) {
     document.documentElement.classList.remove('vuesax-app-is-ltr');
     document.documentElement.classList.add('vuesax-app-is-rtl');
@@ -22,6 +23,7 @@ export const DefineRTL = (Vue, options, vm) => {
     vm.$nextTick(() => {
       if (options.rtl !== vm.$vs.rtl) {
         options.rtl = vm.$vs.rtl;
+        console.log("Updating RTL value");
         // if value change
         injectDirectionClass(vm.$vs.rtl);
       }
