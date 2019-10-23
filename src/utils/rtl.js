@@ -4,7 +4,16 @@
  */
 
 export const injectDirectionClass = (dir) => {
-  console.log("In fucntion - updating classes");
+  console.log("In fucntion: ", dir);
+
+
+    if( typeof injectDirectionClass.counter == 'undefined' ) {
+        injectDirectionClass.counter = 0;
+    }
+    injectDirectionClass.counter++;
+    console.log(injectDirectionClass.counter);
+
+
   if (dir) {
     document.documentElement.classList.remove('vuesax-app-is-ltr');
     document.documentElement.classList.add('vuesax-app-is-rtl');

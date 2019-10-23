@@ -13821,7 +13821,14 @@ var vuesax = __webpack_require__("99c0");
  * will inject 'vuesax-app-is-ltr' (ltr case) or 'vuexsax-app-is-rtl' (rtl case) in the html tag
  */
 var injectDirectionClass = function injectDirectionClass(dir) {
-  console.log("In fucntion - updating classes");
+  console.log("In fucntion: ", dir);
+
+  if (typeof injectDirectionClass.counter == 'undefined') {
+    injectDirectionClass.counter = 0;
+  }
+
+  injectDirectionClass.counter++;
+  console.log(injectDirectionClass.counter);
 
   if (dir) {
     document.documentElement.classList.remove('vuesax-app-is-ltr');
