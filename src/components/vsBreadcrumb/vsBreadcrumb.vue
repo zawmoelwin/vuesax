@@ -82,20 +82,8 @@ export default {
     hasSlot () {
       return !!this.$slots.default
     }
-  },
-  created() {
-    if(this.items) {
-      this.items = this.items.map(item => {
-        if (typeof item.title === "function") {
-          return {
-            ...item,
-            title: item.title(this.$route.params)
-          }
-        }
-
-        return item
-      })
-    }
-  },
+  }
+  // Removed PR: https://github.com/lusaxweb/vuesax/pull/729
+  // Reason: Gives console error regrading prop manipulation
 }
 </script>
