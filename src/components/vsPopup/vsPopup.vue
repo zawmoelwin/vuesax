@@ -5,7 +5,7 @@
       ref="con"
       :class="[`vs-popup-${color}`,{'fullscreen':fullscreen}]"
       class="vs-component con-vs-popup"
-      @click="close($event,true)">
+      @click="close($event,true&&!persistent)">
       <div
         :style="styleCon"
         class="vs-popup--background"/>
@@ -28,7 +28,7 @@
             :icon="iconClose"
             :style="stylePopup"
             class="vs-popup--close vs-popup--close--icon"
-            @click="close"
+            @click="close($event, true)"
           />
         </header>
 
@@ -93,6 +93,10 @@ export default {
       default:'close',
       type:String
     },
+    persistent:{
+      default:false,
+      type:Boolean
+    },
   },
   computed:{
     styleHeader(){
@@ -124,6 +128,8 @@ export default {
       return _color.rColor(color)
     },
     close(event,con){
+      console.log('event :>> ', event);
+      console.log('con :>> ', con);
       if(con){
         if(event.target.className
             && event.target.className.indexOf

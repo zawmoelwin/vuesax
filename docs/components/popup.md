@@ -40,6 +40,11 @@ API:
    parameters: icon name
    description: Element icon.
    default: close
+ - name: persistent
+   type: boolean
+   parameters: true/false
+   description: Make vsPopup persistent. Clicking outside won't close popup
+   default: false
 
 
 ---
