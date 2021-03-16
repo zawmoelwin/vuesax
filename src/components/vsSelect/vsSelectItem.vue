@@ -21,7 +21,10 @@
       @keydown.down.prevent="navigateOptions('next')"
       @keydown.up.prevent="navigateOptions('prev')"
       @keydown.enter.prevent="clickOption()">
-      <vs-icon v-if="$parent.parent.multiple" class="icon-item vs-select--item-icon" icon="check_circle"></vs-icon>
+      <vs-icon 
+        v-if="$parent.parent.multiple" 
+        class="icon-item vs-select--item-icon" 
+        icon="check_circle"></vs-icon>
       <span
         v-html="getText"></span>
     </button>
@@ -164,7 +167,6 @@ export default {
       let
         orientationObject = 'nextSibling',
         lengthx = 0
-
       function getNextLi(li,orientationObject){
         if(li && li.localName == 'li'){
           let lix = li[orientationObject]
@@ -181,25 +183,20 @@ export default {
           return false
         }
       }
-
       var children = this.$parent.parent.$children
-
       children.forEach((item)=>{
         if(item.$children.length > 0) {
           children = [...children,...item.$children]
         }
       })
-
       children = children.filter((item) => {
         return item.$children.length == 0 && item.$el.localName != 'span'
       })
-
       if(orientation == 'prev'){
         orientationObject = 'previousSibling'
         lengthx = children.length
       }
       let nextElement = getNextLi(this.$el[orientationObject],orientationObject)
-
       if(nextElement){
         nextElement.querySelector('.vs-select--item').focus()
       } else {
@@ -226,7 +223,6 @@ export default {
       if(this.value == this.$parent.parent.value){
         this.$parent.parent.valuex = this.text
       }
-
     },
     clickOption(){
       if(this.disabledx){
@@ -247,7 +243,6 @@ export default {
         item.valueInputx = ''
       })
     },
-
     // methods colors
     isColor(){
       return _color.isColor(this.color)
