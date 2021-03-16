@@ -11,8 +11,7 @@
     <label
       v-if="label"
       ref="inputSelectLabel"
-      class="vs-select--label"
-      for="">{{ label }}</label>
+      class="vs-select--label">{{ label }}</label>
     <div class="input-select-con">
       <!-- v-model="valueFilter" -->
       <input
@@ -21,7 +20,6 @@
         :readonly="!autocomplete"
         class="input-select vs-select--input"
         type="text"
-        @click.stop
         @keydown.esc.stop.prevent="closeOptions"
         v-on="listeners">
 
@@ -39,7 +37,6 @@
         :icon-pack="iconPack"
         :icon="icon"
         class="icon-select vs-select--icon"
-        @click.once
       ></vs-icon>
 
       <transition name="fadeselect">
@@ -117,7 +114,7 @@ export default {
   props: {
     value: {},
     noData: {
-      default: "data no available",
+      default: "No data available",
       type: String
     },
     maxSelected: {
@@ -219,8 +216,12 @@ export default {
         },
         focus: event => {
           this.$emit("focus", event);
-          //document.removeEventListener('click',this.clickBlur)
-          this.focus(event);
+          if (event.keyCode ? event.keyCode : event.which) {
+            this.focus();
+          }
+        },
+        mouseup: () => {
+          this.focus();
         },
         input: event => {
           if (this.autocomplete) {
@@ -239,7 +240,6 @@ export default {
               this.filterItems(event.target.value);
             }
           }
-
           this.$children.map(item => {
             item.valueInputx = this.$refs.inputselect.value;
           });
@@ -280,7 +280,9 @@ export default {
   },
   beforeDestroy() {
     let [parent] = document.getElementsByTagName("body");
-
+    if (this.active) {
+      this.closeOptions();
+    }
     if (
       parent &&
       this.$refs.vsSelectOptions &&
@@ -331,18 +333,14 @@ export default {
         this.filterx = false;
       }
       let items = this.$children;
-
       items.forEach(item => {
         if (item.$children.length > 0) {
           items = [...items, ...item.$children];
         }
       });
-
       items.map(item => {
         if (!("text" in item)) return;
-
         let text = item.text;
-
         if (this.multiple) {
           let valuesx = value.split(",");
           valuesx.forEach(value_multi => {
@@ -360,17 +358,14 @@ export default {
           }
         }
       });
-
       let lengthx = items.filter(item => {
         return item.visible;
       });
-
       if (lengthx.length == 0) {
         this.clear = true;
       } else {
         this.clear = false;
       }
-
       this.$nextTick(() => {
         this.cords = this.changePosition();
       });
@@ -380,13 +375,11 @@ export default {
       if (this.multiple) {
         let values = this.value ? this.value : [];
         let options = this.$children;
-
         options.forEach(item => {
           if (item.$children.length > 0) {
             options = [...options, ...item.$children];
           }
         });
-
         let optionsValues = [];
         values.forEach(item => {
           options.forEach(item_option => {
@@ -406,11 +399,9 @@ export default {
     },
     focus() {
       this.active = true;
+      document.addEventListener('click', this.clickBlur);
       this.setLabelClass(this.$refs.inputSelectLabel, true);
       let inputx = this.$refs.inputselect;
-      setTimeout(() => {
-        document.addEventListener("click", this.clickBlur);
-      }, 100);
       if (this.autocomplete && this.multiple) {
         setTimeout(() => {
           if (inputx.value) {
@@ -421,7 +412,6 @@ export default {
       } else if (this.autocomplete && !this.multiple) {
         this.$refs.inputselect.select();
       }
-
       if (!this.autocomplete) {
         if (
           this.multiple ? this.value.length == 0 : !this.value || this.multiple
@@ -437,8 +427,10 @@ export default {
       });
     },
     clickBlur(event) {
-      let closestx = event.target.closest(".vs-select--options");
-
+      if (event.target === this.$refs.inputselect) {
+        return
+      }
+      let closestx = event.target.closest(".vs-select--option");
       if (!closestx) {
         this.closeOptions();
         if (this.autocomplete) {
@@ -448,7 +440,6 @@ export default {
       }
     },
     closeOptions() {
-      // this.$refs.inputselect.blur()
       this.active = false;
       this.setLabelClass(this.$refs.inputSelectLabel, false);
       document.removeEventListener("click", this.clickBlur);
@@ -478,16 +469,13 @@ export default {
           ? elx.getBoundingClientRect().top + elx.clientHeight + scrollTopx + 5
           : elx.getBoundingClientRect().top + scrollTopx;
       }
-
       leftx = elx.getBoundingClientRect().left;
       widthx = elx.offsetWidth;
-
       let cords = {
         left: `${leftx}px`,
         top: `${topx}px`,
         width: `${widthx}px`
       };
-
       return cords;
     },
     beforeEnter(el) {
@@ -505,12 +493,10 @@ export default {
       if (!label) {
         return;
       }
-
       if (focusing) {
         label.classList.add("input-select-label-" + this.color + "--active");
         return;
       }
-
       label.classList.remove("input-select-label-" + this.color + "--active");
     }
   }
